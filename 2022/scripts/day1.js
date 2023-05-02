@@ -10,26 +10,16 @@ function getElvesAndCalories(inventory) {
     .map((caloriesPerElf) => getCalorieSum(caloriesPerElf));
 }
 
-function getElfWithMostCalories(inventory) {
-  let elf = 0;
-  let mostCalories = 0;
-
-  getElvesAndCalories(inventory)
-    .forEach((totalCal, i) => {
-      if (totalCal > mostCalories) {
-        elf = i+1;
-        mostCalories = totalCal;
-      }
-    })
-  return {
-    elf,
-    mostCalories,
-  }
+function getTotalCaloriesForTopElves(inventory, numTopElves) {
+  return getElvesAndCalories(inventory)
+    .sort((a, b) => b - a)
+    .slice(0, numTopElves)
+    .reduce((sum, c) => sum + Number(c), 0);
 }
 
-function main(inventory) {
-  const { elf, mostCalories} = getElfWithMostCalories(inventory);
-  console.log(`\nElf number ${elf} has the most calories: ${mostCalories}`)
+function main(inventory, numTopElves = 1) {
+  const totalCalories = getTotalCaloriesForTopElves(inventory, numTopElves)
+  console.log(`The top ${numTopElves > 1 ? numTopElves + ' elves are' : numTopElves + ' elf is'} carrying a total of ${totalCalories} calories`)
 }
 
-main(elvesCalorieInventory);
+main(elvesCalorieInventory, 3);
