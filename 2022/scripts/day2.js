@@ -4,34 +4,31 @@ const test=`A Y
 B X
 C Z`
 
-const round = {
-  lose: 0,
-  draw: 3,
-  win: 6,
-}
 
-const shapeMatchKey = {
-  A: { Y: round.win, X: round.draw, Z: round.lose },
-  B: { Z: round.win, Y: round.draw, X: round.lose },
-  C: { X: round.win, Z: round.draw, Y: round.lose },
+const results = {
+  X: 0, // lose
+  Y: 3, // draw
+  Z: 6, // win
 }
-
-const shapeScoreKey = {
+const shapeScore = {
   A: 1, // rock
   B: 2, // paper
   C: 3, // scissors
-  X: 1, // rock
-  Y: 2, // paper
-  Z: 3, // scissors
 }
 
-function getScoreForRound(shapes) {
-  const opponent = shapes[0]
-  const player = shapes[1]
+const shapeMatch = {
+  A: { X: shapeScore.C, Y: shapeScore.A, Z: shapeScore.B },
+  B: { X: shapeScore.A, Y: shapeScore.B, Z: shapeScore.C },
+  C: { X: shapeScore.B, Y: shapeScore.C, Z: shapeScore.A },
+}
 
-  const round = shapeMatchKey[opponent][player]
+function getScoreForRound(round) {
+  const opponentShape = round[0];
+  const strategyResult = round[1];
 
-  return shapeScoreKey[player] + round;
+  const playerShape = shapeMatch[opponentShape][strategyResult];
+
+  return playerShape + results[strategyResult];
 }
 
 function getStrategyRounds(strategy) {
@@ -43,12 +40,12 @@ function getStrategyRounds(strategy) {
 function totalScoreForTournament(strategy) {
   return getStrategyRounds(strategy)
     .map((round) => getScoreForRound(round))
-    .reduce((sum, round) => sum + round)
+    .reduce((sum, round) => sum + round);
 }
 
 function main(strategy) {
   const score = totalScoreForTournament(strategy)
-  console.log(`Your total score is ${score}`)
+  console.log(`Your total score is ${score}`);
 }
 
-main(elfStrategy)
+main(elfStrategy);
