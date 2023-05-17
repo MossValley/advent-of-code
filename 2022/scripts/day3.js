@@ -1,12 +1,5 @@
 const rucksackList = require('../puzzle_input/day3-rucksacks');
 
-// const test = `vJrwpWtwJgWrhcsFMMfFFhFp
-// jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
-// PmmdzqPrVvPwwTWBwg
-// wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
-// ttgJtRGJQctTZtZT
-// CrZsJsPPZsGzwwsLwLmpwMDw`;
-
 const itemTypes = {
   a: 1,
   z: 26,
@@ -34,39 +27,49 @@ function getRucksackCompartments(rucksack) {
   }
 }
 
-function getSharedItemType(rucksack) {
-  const { c1, c2 } = getRucksackCompartments(rucksack.split(''));
+function getSharedItemType(group) {
+  const e1 = group[0].split('');
+  const e2 = group[1].split('');
+  const e3 = group[2].split('');
 
-  return c1.filter((item) => c2.includes(item))
+  return e1.filter((item) => e2.includes(item) && e3.includes(item))
     .filter((item, i, arr) => i === 0 || !arr.slice(i-1).includes(item));
 }
 
-function getRucksacksAsArray(rucksacks) {
-  return rucksacks.split('\n');
+function sortRucksacksIntoGroups(rucksacks) {
+  const ELVES_PER_GROUP = 3;
+  const allRucksacks = rucksacks.split('\n');
+
+  const groups = [];
+  for(let i = 0; i < allRucksacks.length; i += ELVES_PER_GROUP) {
+    const group = []
+    for(let j = 0; j < ELVES_PER_GROUP; j++) {
+      group.push(allRucksacks[i+j])
+    }
+    groups.push(group)
+  }
+  return groups;
 }
 
 function getItemValue(item) {
   if (lowercaseItemPriorities.hasOwnProperty(item)) {
-    return lowercaseItemPriorities[item]
+    return lowercaseItemPriorities[item];
   }
   if (uppercaseItemPriorities.hasOwnProperty(item)) {
-    return uppercaseItemPriorities[item]
+    return uppercaseItemPriorities[item];
   }
   return 0;
 }
 
-function sumOfSharedItemsInRucksacks(rucksacks) {
-  return getRucksacksAsArray(rucksacks)
-    .map((rucksack) => getSharedItemType(rucksack))
-    .reduce((sum, item) => sum + getItemValue(item), 0)
+function sumOfCommonItemsPerGroup(rucksacks) {
+  return sortRucksacksIntoGroups(rucksacks)
+    .map((group) => getSharedItemType(group))
+    .reduce((sum, item) => sum + getItemValue(item), 0);
 }
-
-
 
 function main(rucksacks) {
-  const result = sumOfSharedItemsInRucksacks(rucksacks);
+  const result = sumOfCommonItemsPerGroup(rucksacks);
   console.log('Sum of priorities of items', result);
 }
-
 
 main(rucksackList)
