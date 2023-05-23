@@ -19,14 +19,6 @@ function itemValues({start, end, charCodeDiff}) {
 const lowercaseItemPriorities = itemValues({ start: itemTypes.a, end: itemTypes.z, charCodeDiff: 96 });
 const uppercaseItemPriorities = itemValues({ start: itemTypes.A, end: itemTypes.Z, charCodeDiff: 38 });
 
-
-function getRucksackCompartments(rucksack) {
-  return {
-    c1: rucksack.slice(0, rucksack.length/2),
-    c2: rucksack.slice(rucksack.length/2, rucksack.length)
-  }
-}
-
 function getSharedItemType(group) {
   const e1 = group[0].split('');
   const e2 = group[1].split('');
